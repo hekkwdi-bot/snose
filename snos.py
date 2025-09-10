@@ -13,7 +13,7 @@ intents.members = True
 bot = commands.Bot(command_prefix='!', intents=intents, help_command=None)
 
 # Токен бота (нужно заменить на ваш)
-TOKEN = "YOUR_BOT_TOKEN_HERE"
+TOKEN = "MTQxNTQyNTY3Mzk1MDAwMzI0MA.GPo2WZ.uL8IwQeyR9k5y19nqqJ4jDjmFTh4K0y6q6NFXw"
 
 @bot.event
 async def on_ready():
@@ -146,4 +146,4 @@ if __name__ == "__main__":
     async def on_connect():
         await bot.tree.sync()
     
-    bot.run(TOKEN)
+    bot.run(MTQxNTQyNTY3Mzk1MDAwMzI0MA.GPo2WZ.uL8IwQeyR9k5y19nqqJ4jDjmFTh4K0y6q6NFXw)
